@@ -1,0 +1,36 @@
+package main
+
+import (
+    "fmt"
+    "strconv"
+    "time"
+)
+
+func genAlphabets(c chan<- string, n string) {
+       c <- n
+}
+func genNumbers(c chan<- string, n string) {
+        c <- n
+}
+func PrintChannel(c <-chan string) { //<-chan  as were are reading
+    for {
+        msg := <-c
+        fmt.Print(msg)
+    }
+}
+func main() {
+    c := make(chan string)
+    num := 65
+    x := 1
+    for num < 91 {
+        go genAlphabets(c, string(num))
+        go genNumbers(c, strconv.Itoa(x))
+        go PrintChannel(c)
+        num++
+        x++
+
+        time.Sleep(1 * time.Millisecond)
+    }
+
+}
+
